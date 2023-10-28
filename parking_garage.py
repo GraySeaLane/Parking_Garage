@@ -39,6 +39,8 @@
 
 import math
 from timeit import default_timer as timer
+# from IPython.display import Image, display
+
 currentTicket = {}
 
 
@@ -48,9 +50,12 @@ currentTicket = {}
 
 #first class
 class Car:
-    def __init__(self, license_plate):
+    def __init__(self, license_plate, entry_time):
         self.license_plate = license_plate
         self.car_info = []
+        self.paid = False
+        self.entry_time = entry_time
+
         
 #second class
 class Parking_Garage:
@@ -58,12 +63,17 @@ class Parking_Garage:
     def __init__(self):
         self.tickets = 200
         self.parking_spaces = 100
-
+        self.cars = {}
+    
     def take_ticket(self):
         if self.parking_spaces > 0 and self.tickets > 0:
             print("Welcome to JGM Garage!")
-            license_plate = input("Please enter your vehicle's license plate: ").lower()
-            currentTicket[license_plate] = {"paid": False, "entry_time": timer()}
+            license_plate = input("Please enter your vehicle's license plate: ")
+           #old
+            # currentTicket[license_plate] = {"paid": False, "entry_time": timer()}
+            #new
+            self.cars[license_plate] = Car(license_plate, timer())
+           
             self.tickets -= 1
             self.parking_spaces -= 1
             print("Please take your ticket and find an available parking space.")
@@ -78,11 +88,15 @@ class Parking_Garage:
             # decrement from available tickets and parking spaces
         # else: 
         # print("Please enter a valid response.")
-    
+        
         
     def pay_for_parking(self):
-        license_plate = input("Please enter your vehicle's license plate: ").lower()
+        license_plate = input("To pay please re-enter your vehicle's license plate: ")
+        if license_plate in self.cars:
+        # if curr_car
+            curr_car = self.cars[license_plate]
 
+        # print(curr_car)
         if license_plate in currentTicket and not currentTicket[license_plate]["paid"]:
                 exit_time = timer()
                 entry_time = currentTicket[license_plate]["entry_time"]
@@ -104,11 +118,12 @@ class Parking_Garage:
             print("Invalid license plate number, please try again.")
             
     def leave_garage(self):
-        license_plate = input("Please enter your vehicle's license plate: ").lower()
+        license_plate = input("Please enter your vehicle's license plate: ")
         if license_plate in currentTicket: 
              if currentTicket[license_plate]["paid"] == True:
                 print("Thank you have a nice day!")
-                self.tickets += 1
+                # display(Images/cute.jpeg)
+
                 self.parking_spaces += 1
                 del currentTicket[license_plate]
 
@@ -127,10 +142,10 @@ class Parking_Garage:
 #     def update_parking_spaces(self):
 #         return self.parking_spaces
 
-# Car()
-# garage = Parking_Garage()
-# garage.run()
+Car()
+garage = Parking_Garage()
+garage.run()
 
-Parking_Garage().take_ticket()
-Parking_Garage().pay_for_parking()
-Parking_Garage().leave_garage()
+# Parking_Garage().take_ticket()
+# Parking_Garage().pay_for_parking()
+# Parking_Garage().leave_garage()
